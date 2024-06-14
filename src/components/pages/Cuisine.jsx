@@ -18,7 +18,7 @@ const Cuisine = () => {
         } else {
             try {
                 const response = await fetch(
-                    `https://api.spoonacular.com/recipes/complexSearch?cuisine=${type}&number=1000&diet=vegetarian&apiKey=afa529ccde7c4e4ba140dd8570d5bd09`
+                    `https://api.spoonacular.com/recipes/complexSearch?cuisine=${type}&number=1000&diet=vegetarian&apiKey=81a32e57dbdb47bbb6ca27e9492f0d84`
                 );
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
