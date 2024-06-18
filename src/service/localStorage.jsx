@@ -1,3 +1,5 @@
+//VeggieVibes\src\service\localStorage.jsx
+
 export const getLocalStorageData = (key) => {
     const data = localStorage.getItem(key);
     if (!data) return null;

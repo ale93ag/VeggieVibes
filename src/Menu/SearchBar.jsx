@@ -1,4 +1,4 @@
-// components/Menu/SearchBar.js
+// VeggieVibes\src\Menu\SearchBar.jsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';

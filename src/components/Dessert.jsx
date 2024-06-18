@@ -1,10 +1,12 @@
+//VeggieVibes\src\components\Dessert.jsx
+
 import React, { useEffect, useState } from 'react';
 import { getDessertService } from '../service/recipes.service';
 import styled from 'styled-components';
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 import '@splidejs/splide/dist/css/splide.min.css';
-import Gradient from '../UI/Gradient';
-import Card from '../UI/Card';
+import Gradient from '../Menu/UI/Gradient';
+import Card from '../Menu/UI/Card';
 import { getLocalStorageData, setLocalStorageData } from '../service/localStorage';
 import { Link } from 'react-router-dom';
 

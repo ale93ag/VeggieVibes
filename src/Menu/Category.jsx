@@ -1,4 +1,4 @@
-// components/Menu/Category.js
+// VeggieVibes\src\Menu\Category.jsx
 import React from 'react';
 import styled from 'styled-components';
 import { IoHome } from "react-icons/io5";

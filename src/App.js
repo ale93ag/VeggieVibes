@@ -1,11 +1,12 @@
 // App.js
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Home from './components/pages/Home';
-import Cuisine from './components/pages/Cuisine';
-import Menu from './components/Menu/Menu';
-import SearchResults from './components/pages/SearchResults'; // Importa la nuova pagina dei risultati della ricerca
-import Details from './components/pages/Details';
+import Menu from './Menu/Menu';
+import Details from './pages/views/Details';
+import Cuisine from './pages/views/Cuisine';
+import Home from './pages/views/Home';
+import SearchResults from './pages/views/SearchResults';
+
 
 function App() {
   return (

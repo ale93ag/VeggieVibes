@@ -1,12 +1,11 @@
-// components/Menu/Menu.js
+// VeggieVibes\src\Menu\Menu.jsx
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import SearchBar from './SearchBar';
 import Category from './Category';
 import styled from 'styled-components';
-
-import Card from '../../UI/Card';
-import Gradient from '../../UI/Gradient';
+import Card from './UI/Card';
+import Gradient from './UI/Gradient';
 
 const Menu = () => {
   const [searchResults, setSearchResults] = useState([]);
