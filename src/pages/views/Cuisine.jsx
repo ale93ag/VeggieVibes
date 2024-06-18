@@ -1,14 +1,13 @@
-// Cuisine.jsx
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { getLocalStorageData, setLocalStorageData } from '../../service/localStorage';
-import Loader from '../loader/Loader'; // Importa il componente Loader
+import Loader from '../loader/Loader';
+import { Helmet } from 'react-helmet'; // Aggiunta di React Helmet
 
 const Cuisine = () => {
   const [cuisine, setCuisine] = useState([]);
-  const [loading, setLoading] = useState(true); // Stato per gestire il caricamento
-
+  const [loading, setLoading] = useState(true);
   const { type } = useParams();
 
   useEffect(() => {
@@ -19,7 +18,7 @@ const Cuisine = () => {
     const localData = getLocalStorageData('cuisine_' + type);
     if (localData) {
       setCuisine(localData);
-      setLoading(false); // Imposta il caricamento su false quando i dati vengono recuperati dal localStorage
+      setLoading(false);
     } else {
       try {
         const response = await fetch(
@@ -30,22 +29,24 @@ const Cuisine = () => {
         }
         const data = await response.json();
         setCuisine(data.results);
-        setLocalStorageData('cuisine_' + type, data.results, 60); // Salva i dati nel localStorage
-        setLoading(false); // Imposta il caricamento su false quando i dati vengono fetchati dalle API
+        setLocalStorageData('cuisine_' + type, data.results, 60);
+        setLoading(false);
       } catch (error) {
         console.error("Failed to fetch data:", error.message);
-        // Gestione dell'errore: mostrare un messaggio all'utente, ecc.
-        setLoading(false); // Assicurati di impostare il caricamento su false anche in caso di errore
+        setLoading(false);
       }
     }
   };
 
   if (loading) {
-    return <Loader />; // Mostra il Loader durante il caricamento dei dati
+    return <Loader />;
   }
 
   return (
     <Wrapper>
+      <Helmet>
+        <title>{type} Cuisine</title> {/* Impostazione del titolo dinamico con Helmet */}
+      </Helmet>
       <h3>{type}</h3>
       <Grid>
         {cuisine && cuisine.map((item) => (
@@ -103,6 +104,7 @@ const Card = styled.div`
 `;
 
 export default Cuisine;
+
 
 
 
