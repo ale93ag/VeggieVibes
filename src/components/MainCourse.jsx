@@ -1,5 +1,3 @@
-// VeggieVibes\src\components\MainCourse.jsx
-
 import React, { useEffect, useState } from 'react';
 import { getMainCourseService } from '../service/recipes.service';
 import styled from 'styled-components';
@@ -13,8 +11,9 @@ import { Link } from 'react-router-dom';
 const MainCourse = () => {
   const [mainCourse, setMainCourse] = useState([]);
 
-  useEffect(() => {
-    const fetchMainCourse = async () => {
+  // Definizione della funzione fetchMainCourse all'esterno di useEffect
+  const fetchMainCourse = async () => {
+    try {
       const localData = getLocalStorageData('mainCourse');
       if (localData) {
         setMainCourse(localData);
@@ -22,12 +21,16 @@ const MainCourse = () => {
         const data = await getMainCourseService();
         if (data && data.results) {
           setMainCourse(data.results);
-          setLocalStorageData('mainCourse', data.results, 60); // Impost0 60 minuti di scadenza
+          setLocalStorageData('mainCourse', data.results, 60); // Cache for 1 hour (60 minutes)
         }
       }
-    };
+    } catch (error) {
+      console.error('Failed to fetch main course:', error);
+    }
+  };
 
-    fetchMainCourse();
+  useEffect(() => {
+    fetchMainCourse(); // Chiamata della funzione fetchMainCourse dentro useEffect
   }, []);
 
   return (
@@ -47,9 +50,9 @@ const MainCourse = () => {
           <SplideSlide key={item.id}>
             <Card>
               <Link to={`/detail/${item.id}`}>
-              <img src={item.image} alt={item.title} />
-              <Gradient />
-              <p>{item.title}</p>
+                <img src={item.image} alt={item.title} />
+                <Gradient />
+                <p>{item.title}</p>
               </Link>
             </Card>
           </SplideSlide>
@@ -69,4 +72,5 @@ const Wrapper = styled.div`
 `;
 
 export default MainCourse;
+
 

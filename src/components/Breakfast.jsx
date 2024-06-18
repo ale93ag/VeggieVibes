@@ -1,5 +1,3 @@
-//VeggieVibes\src\components\Breakfast.jsx
-
 import React, { useEffect, useState } from 'react';
 import { getBreakfastService } from '../service/recipes.service';
 import styled from 'styled-components';
@@ -13,8 +11,9 @@ import { Link } from 'react-router-dom';
 const Breakfast = () => {
   const [breakfast, setBreakfast] = useState([]);
 
-  useEffect(() => {
-    const fetchBreakfast = async () => {
+  // Definizione della funzione fetchBreakfast all'esterno di useEffect
+  const fetchBreakfast = async () => {
+    try {
       const localData = getLocalStorageData('breakfast');
       if (localData) {
         setBreakfast(localData);
@@ -22,12 +21,16 @@ const Breakfast = () => {
         const data = await getBreakfastService();
         if (data && data.results) {
           setBreakfast(data.results);
-          setLocalStorageData('breakfast', data.results, 60); // Imposto 60 minuti di scadenza
+          setLocalStorageData('breakfast', data.results, 60); // Cache for 1 hour (60 minutes)
         }
       }
-    };
+    } catch (error) {
+      console.error('Failed to fetch breakfast:', error);
+    }
+  };
 
-    fetchBreakfast();
+  useEffect(() => {
+    fetchBreakfast(); // Chiamata della funzione fetchBreakfast dentro useEffect
   }, []);
 
   return (
@@ -69,3 +72,4 @@ const Wrapper = styled.div`
 `;
 
 export default Breakfast;
+

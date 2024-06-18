@@ -1,5 +1,3 @@
-// VeggieVibes\src\components\SideDish.jsx
-
 import React, { useEffect, useState } from 'react';
 import { getSideDishService } from '../service/recipes.service';
 import styled from 'styled-components';
@@ -13,8 +11,9 @@ import { Link } from 'react-router-dom';
 const SideDish = () => {
   const [sideDish, setSideDish] = useState([]);
 
-  useEffect(() => {
-    const fetchSideDish = async () => {
+  // Definizione della funzione fetchSideDish all'esterno di useEffect
+  const fetchSideDish = async () => {
+    try {
       const localData = getLocalStorageData('sideDish');
       if (localData) {
         setSideDish(localData);
@@ -22,12 +21,16 @@ const SideDish = () => {
         const data = await getSideDishService();
         if (data && data.results) {
           setSideDish(data.results);
-          setLocalStorageData('sideDish', data.results, 60); // Imposto 60 minuti di scadenza
+          setLocalStorageData('sideDish', data.results, 60); // Cache for 1 hour (60 minutes)
         }
       }
-    };
+    } catch (error) {
+      console.error('Failed to fetch side dish:', error);
+    }
+  };
 
-    fetchSideDish();
+  useEffect(() => {
+    fetchSideDish(); // Chiamata della funzione fetchSideDish dentro useEffect
   }, []);
 
   return (
@@ -69,3 +72,4 @@ const Wrapper = styled.div`
 `;
 
 export default SideDish;
+

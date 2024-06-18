@@ -3,16 +3,12 @@ import { Link, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { getLocalStorageData, setLocalStorageData } from '../../service/localStorage';
 import Loader from '../loader/Loader';
-import { Helmet } from 'react-helmet'; // Aggiunta di React Helmet
+import { Helmet } from 'react-helmet';
 
 const Cuisine = () => {
   const [cuisine, setCuisine] = useState([]);
   const [loading, setLoading] = useState(true);
   const { type } = useParams();
-
-  useEffect(() => {
-    fetchCuisine(type);
-  }, [type]);
 
   const fetchCuisine = async (type) => {
     const localData = getLocalStorageData('cuisine_' + type);
@@ -38,6 +34,10 @@ const Cuisine = () => {
     }
   };
 
+  useEffect(() => {
+    fetchCuisine(type);
+  }, [type]);
+
   if (loading) {
     return <Loader />;
   }
@@ -45,7 +45,7 @@ const Cuisine = () => {
   return (
     <Wrapper>
       <Helmet>
-        <title>{type} Cuisine</title> {/* Impostazione del titolo dinamico con Helmet */}
+        <title>{type} Cuisine</title>
       </Helmet>
       <h3>{type}</h3>
       <Grid>
@@ -104,6 +104,7 @@ const Card = styled.div`
 `;
 
 export default Cuisine;
+
 
 
 

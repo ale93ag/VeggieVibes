@@ -1,5 +1,3 @@
-//VeggieVibes\src\components\Appetizer.jsx
-
 import React, { useEffect, useState } from 'react';
 import { getAppetizerService } from '../service/recipes.service';
 import styled from 'styled-components';
@@ -11,30 +9,35 @@ import { getLocalStorageData, setLocalStorageData } from '../service/localStorag
 import { Link } from 'react-router-dom';
 
 const Appetizer = () => {
-  const [appetizer, setAppetizer] = useState([]);
+  const [appetizers, setAppetizers] = useState([]);
 
-  useEffect(() => {
-    const fetchAppetizer = async () => {
-      const localData = getLocalStorageData('appetizer');
+  // Definizione della funzione fetchAppetizers all'esterno di useEffect
+  const fetchAppetizers = async () => {
+    try {
+      const localData = getLocalStorageData('appetizers');
       if (localData) {
-        setAppetizer(localData);
+        setAppetizers(localData);
       } else {
         const data = await getAppetizerService();
         if (data && data.results) {
-          setAppetizer(data.results);
-          setLocalStorageData('appetizer', data.results, 60); // Imposto 60 minuti di scadenza
+          setAppetizers(data.results);
+          setLocalStorageData('appetizers', data.results, 60); // Cache for 1 hour (60 minutes)
         }
       }
-    };
+    } catch (error) {
+      console.error('Failed to fetch appetizers:', error);
+    }
+  };
 
-    fetchAppetizer();
+  useEffect(() => {
+    fetchAppetizers(); // Chiamata della funzione fetchAppetizers dentro useEffect
   }, []);
 
   return (
     <Wrapper>
-      <h3>Appetizer</h3>
+      <h3>Appetizers</h3>
       <Splide
-        aria-label="Appetizer"
+        aria-label="Appetizers"
         options={{
           perPage: 3,
           arrows: true,
@@ -43,13 +46,13 @@ const Appetizer = () => {
           gap: '5rem',
         }}
       >
-        {appetizer.map((item) => (
-          <SplideSlide key={item.id}>
+        {appetizers.map((appetizer) => (
+          <SplideSlide key={appetizer.id}>
             <Card>
-              <Link to={`/detail/${item.id}`}>
-                <img src={item.image} alt={item.title} />
+              <Link to={`/detail/${appetizer.id}`}>
+                <img src={appetizer.image} alt={appetizer.title} />
                 <Gradient />
-                <p>{item.title}</p>
+                <p>{appetizer.title}</p>
               </Link>
             </Card>
           </SplideSlide>
@@ -69,3 +72,4 @@ const Wrapper = styled.div`
 `;
 
 export default Appetizer;
+

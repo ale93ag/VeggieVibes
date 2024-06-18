@@ -1,20 +1,19 @@
-//VeggieVibes\src\components\Dessert.jsx
-
 import React, { useEffect, useState } from 'react';
 import { getDessertService } from '../service/recipes.service';
 import styled from 'styled-components';
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 import '@splidejs/splide/dist/css/splide.min.css';
-import Gradient from '../Menu/UI/Gradient';
 import Card from '../Menu/UI/Card';
+import Gradient from '../Menu/UI/Gradient';
 import { getLocalStorageData, setLocalStorageData } from '../service/localStorage';
 import { Link } from 'react-router-dom';
 
 const Dessert = () => {
   const [dessert, setDessert] = useState([]);
 
-  useEffect(() => {
-    const fetchDessert = async () => {
+  // Definizione della funzione fetchDessert all'esterno di useEffect
+  const fetchDessert = async () => {
+    try {
       const localData = getLocalStorageData('dessert');
       if (localData) {
         setDessert(localData);
@@ -22,12 +21,16 @@ const Dessert = () => {
         const data = await getDessertService();
         if (data && data.results) {
           setDessert(data.results);
-          setLocalStorageData('dessert', data.results, 60); // Imposto 60 minuti di scadenza
+          setLocalStorageData('dessert', data.results, 60); // Cache for 1 hour (60 minutes)
         }
       }
-    };
+    } catch (error) {
+      console.error('Failed to fetch dessert:', error);
+    }
+  };
 
-    fetchDessert();
+  useEffect(() => {
+    fetchDessert(); // Chiamata della funzione fetchDessert dentro useEffect
   }, []);
 
   return (
@@ -46,10 +49,10 @@ const Dessert = () => {
         {dessert.map((item) => (
           <SplideSlide key={item.id}>
             <Card>
-            <Link to={`/detail/${item.id}`}>
-              <img src={item.image} alt={item.title} />
-              <Gradient />
-              <p>{item.title}</p>
+              <Link to={`/detail/${item.id}`}>
+                <img src={item.image} alt={item.title} />
+                <Gradient />
+                <p>{item.title}</p>
               </Link>
             </Card>
           </SplideSlide>
@@ -69,5 +72,7 @@ const Wrapper = styled.div`
 `;
 
 export default Dessert;
+
+
 
 

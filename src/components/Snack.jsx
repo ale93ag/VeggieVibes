@@ -1,5 +1,3 @@
-// VeggieVibes\src\components\Snack.jsx
-
 import React, { useEffect, useState } from 'react';
 import { getSnackService } from '../service/recipes.service';
 import styled from 'styled-components';
@@ -13,8 +11,9 @@ import { Link } from 'react-router-dom';
 const Snack = () => {
   const [snack, setSnack] = useState([]);
 
-  useEffect(() => {
-    const fetchSnack = async () => {
+  // Definizione della funzione fetchSnack al di fuori di useEffect per migliorare la leggibilità
+  const fetchSnack = async () => {
+    try {
       const localData = getLocalStorageData('snack');
       if (localData) {
         setSnack(localData);
@@ -22,12 +21,16 @@ const Snack = () => {
         const data = await getSnackService();
         if (data && data.results) {
           setSnack(data.results);
-          setLocalStorageData('snack', data.results, 60); // Imposto 60 minuti di scadenza
+          setLocalStorageData('snack', data.results, 60); // Cache per 1 ora (60 minuti)
         }
       }
-    };
+    } catch (error) {
+      console.error('Errore nel recupero degli snack:', error);
+    }
+  };
 
-    fetchSnack();
+  useEffect(() => {
+    fetchSnack(); // Chiamata della funzione fetchSnack dentro useEffect
   }, []);
 
   return (
@@ -46,10 +49,10 @@ const Snack = () => {
         {snack.map((item) => (
           <SplideSlide key={item.id}>
             <Card>
-            <Link to={`/detail/${item.id}`}>
-              <img src={item.image} alt={item.title} />
-              <Gradient />
-              <p>{item.title}</p>
+              <Link to={`/detail/${item.id}`}>
+                <img src={item.image} alt={item.title} />
+                <Gradient />
+                <p>{item.title}</p>
               </Link>
             </Card>
           </SplideSlide>
@@ -69,3 +72,4 @@ const Wrapper = styled.div`
 `;
 
 export default Snack;
+
