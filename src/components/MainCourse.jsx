@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { getMainCourseService } from '../service/recipes.service';
 import styled from 'styled-components';
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 import '@splidejs/splide/dist/css/splide.min.css';
@@ -7,6 +6,7 @@ import Card from '../Menu/UI/Card';
 import Gradient from '../Menu/UI/Gradient';
 import { getLocalStorageData, setLocalStorageData } from '../service/localStorage';
 import { Link } from 'react-router-dom';
+import { getMainCourseService } from '../service/ApiClient';
 
 const MainCourse = () => {
   const [mainCourse, setMainCourse] = useState([]);

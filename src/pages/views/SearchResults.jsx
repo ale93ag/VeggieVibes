@@ -2,18 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Loader from '../loader/Loader';
-import { searchRecipesService } from '../../service/recipes.service';
 import Card from '../../Menu/UI/Card';
 import Gradient from '../../Menu/UI/Gradient';
+import { searchRecipesService } from '../../service/ApiClient';
 
 const SearchResults = () => {
   const { searchValue } = useParams();
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchResults();
-  }, [searchValue]);
 
   const fetchResults = async () => {
     try {
@@ -25,6 +21,12 @@ const SearchResults = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchResults();
+  }, [searchValue]);
+
+
 
   return (
     <Grid>
