@@ -1,5 +1,4 @@
-// src/components/Snack.jsx
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 import '@splidejs/splide/dist/css/splide.min.css';
@@ -12,7 +11,7 @@ import useStore from '../store/useStore';
 const Snack = () => {
   const { snack, setSnack } = useStore();
 
-  const fetchSnack = async () => {
+  const fetchSnack = useCallback(async () => {
     try {
       const data = await getSnackService();
       if (data && data.results) {
@@ -21,13 +20,13 @@ const Snack = () => {
     } catch (error) {
       console.error('Failed to fetch snack:', error);
     }
-  };
+  }, [setSnack]);
 
   useEffect(() => {
     if (snack.length === 0) {
       fetchSnack();
     }
-  }, [snack]);
+  }, [snack, fetchSnack]);
 
   return (
     <Wrapper>
@@ -68,5 +67,6 @@ const Wrapper = styled.div`
 `;
 
 export default Snack;
+
 
 

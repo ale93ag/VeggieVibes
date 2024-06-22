@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Loader from '../loader/Loader';
@@ -11,7 +11,7 @@ const SearchResults = () => {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchResults = async () => {
+  const fetchResults = useCallback(async () => {
     try {
       const data = await searchRecipesService(searchValue);
       setResults(data.results);
@@ -20,13 +20,11 @@ const SearchResults = () => {
       console.error('Error fetching search results:', error);
       setLoading(false);
     }
-  };
+  }, [searchValue]);
 
   useEffect(() => {
     fetchResults();
-  }, [searchValue]);
-
-
+  }, [fetchResults]);
 
   return (
     <Grid>

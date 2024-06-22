@@ -1,5 +1,4 @@
-// src/components/Dessert.jsx
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 import '@splidejs/splide/dist/css/splide.min.css';
@@ -12,7 +11,7 @@ import useStore from '../store/useStore';
 const Dessert = () => {
   const { dessert, setDessert } = useStore();
 
-  const fetchDessert = async () => {
+  const fetchDessert = useCallback(async () => {
     try {
       const data = await getDessertService();
       if (data && data.results) {
@@ -21,13 +20,13 @@ const Dessert = () => {
     } catch (error) {
       console.error('Failed to fetch dessert:', error);
     }
-  };
+  }, [setDessert]);
 
   useEffect(() => {
     if (dessert.length === 0) {
       fetchDessert();
     }
-  }, [dessert]);
+  }, [dessert, fetchDessert]);
 
   return (
     <Wrapper>
@@ -68,6 +67,7 @@ const Wrapper = styled.div`
 `;
 
 export default Dessert;
+
 
 
 

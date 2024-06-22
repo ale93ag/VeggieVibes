@@ -1,5 +1,4 @@
-// src/components/Appetizer.jsx
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 import '@splidejs/splide/dist/css/splide.min.css';
@@ -12,7 +11,7 @@ import useStore from '../store/useStore';
 const Appetizer = () => {
   const { appetizers, setAppetizers } = useStore();
 
-  const fetchAppetizers = async () => {
+  const fetchAppetizers = useCallback(async () => {
     try {
       const data = await getAppetizerService();
       if (data && data.results) {
@@ -21,13 +20,13 @@ const Appetizer = () => {
     } catch (error) {
       console.error('Failed to fetch appetizers:', error);
     }
-  };
+  }, [setAppetizers]);
 
   useEffect(() => {
     if (appetizers.length === 0) {
       fetchAppetizers();
     }
-  }, [appetizers]);
+  }, [appetizers, fetchAppetizers]);
 
   return (
     <Wrapper>
@@ -68,3 +67,4 @@ const Wrapper = styled.div`
 `;
 
 export default Appetizer;
+

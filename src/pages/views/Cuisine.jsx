@@ -1,6 +1,4 @@
-// VeggieVibes/src/components/Cuisine.jsx
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Loader from '../loader/Loader';
@@ -13,7 +11,7 @@ const Cuisine = () => {
     const { type } = useParams();
     const { cuisine, setCuisine } = useStore(); // Utilizzo di Zustand per gestire le ricette di tipo cuisine
 
-    const fetchCuisine = async (type) => {
+    const fetchCuisine = useCallback(async (type) => {
         try {
             setLoading(true);
             const data = await getCuisineRecipes(type); // Chiamata API per ottenere le ricette per il tipo specificato
@@ -23,11 +21,11 @@ const Cuisine = () => {
             console.error("Failed to fetch data:", error.message);
             setLoading(false);
         }
-    };
+    }, [setCuisine]);
 
     useEffect(() => {
         fetchCuisine(type);
-    }, [type]);
+    }, [type, fetchCuisine]);
 
     if (loading) {
         return <Loader />;
@@ -95,6 +93,7 @@ const Card = styled.div`
 `;
 
 export default Cuisine;
+
 
 
 

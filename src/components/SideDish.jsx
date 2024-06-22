@@ -1,5 +1,4 @@
-// src/components/SideDish.jsx
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 import '@splidejs/splide/dist/css/splide.min.css';
@@ -12,7 +11,7 @@ import useStore from '../store/useStore';
 const SideDish = () => {
   const { sideDish, setSideDish } = useStore();
 
-  const fetchSideDish = async () => {
+  const fetchSideDish = useCallback(async () => {
     try {
       const data = await getSideDishService();
       if (data && data.results) {
@@ -21,13 +20,13 @@ const SideDish = () => {
     } catch (error) {
       console.error('Failed to fetch side dish:', error);
     }
-  };
+  }, [setSideDish]);
 
   useEffect(() => {
     if (sideDish.length === 0) {
       fetchSideDish();
     }
-  }, [sideDish]);
+  }, [sideDish, fetchSideDish]);
 
   return (
     <Wrapper>
@@ -68,5 +67,6 @@ const Wrapper = styled.div`
 `;
 
 export default SideDish;
+
 
 

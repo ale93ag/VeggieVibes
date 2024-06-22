@@ -1,5 +1,4 @@
-// src/components/MainCourse.jsx
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 import '@splidejs/splide/dist/css/splide.min.css';
@@ -12,7 +11,7 @@ import useStore from '../store/useStore';
 const MainCourse = () => {
   const { mainCourse, setMainCourse } = useStore();
 
-  const fetchMainCourse = async () => {
+  const fetchMainCourse = useCallback(async () => {
     try {
       const data = await getMainCourseService();
       if (data && data.results) {
@@ -21,13 +20,13 @@ const MainCourse = () => {
     } catch (error) {
       console.error('Failed to fetch main course:', error);
     }
-  };
+  }, [setMainCourse]);
 
   useEffect(() => {
     if (mainCourse.length === 0) {
       fetchMainCourse();
     }
-  }, [mainCourse]);
+  }, [mainCourse, fetchMainCourse]);
 
   return (
     <Wrapper>

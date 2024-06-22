@@ -1,7 +1,8 @@
-// VeggieVibes\src\service\apiClient.js
-
 import axios from 'axios';
 import { SERVER_URL, recipesUrlComplexSearch } from './url';
+
+// Dichiarazione centralizzata della APIKEY
+const APIKEY = 'f2da81fd7a30432f9f990cfd3d42dd52';
 
 const getDessertService = async () => {
     try {
@@ -10,7 +11,7 @@ const getDessertService = async () => {
                 number: 1000,
                 type: 'dessert',
                 diet: 'vegetarian',
-                apiKey: '860ebba798fb4343baf9e3863e6afd6e'
+                apiKey: APIKEY
             }
         });
         return response.data;
@@ -27,7 +28,7 @@ const getMainCourseService = async () => {
                 number: 1000,
                 type: 'main course',
                 diet: 'vegetarian',
-                apiKey: '860ebba798fb4343baf9e3863e6afd6e'
+                apiKey: APIKEY
             }
         });
         return response.data;
@@ -44,7 +45,7 @@ const getSnackService = async () => {
                 number: 1000,
                 type: 'snack',
                 diet: 'vegetarian',
-                apiKey: '860ebba798fb4343baf9e3863e6afd6e'
+                apiKey: APIKEY
             }
         });
         return response.data;
@@ -61,7 +62,7 @@ const getBreakfastService = async () => {
                 number: 1000,
                 type: 'breakfast',
                 diet: 'vegetarian',
-                apiKey: '860ebba798fb4343baf9e3863e6afd6e'
+                apiKey: APIKEY
             }
         });
         return response.data;
@@ -78,7 +79,7 @@ const getSideDishService = async () => {
                 number: 1000,
                 type: 'side dish',
                 diet: 'vegetarian',
-                apiKey: '860ebba798fb4343baf9e3863e6afd6e'
+                apiKey: APIKEY
             }
         });
         return response.data;
@@ -95,7 +96,7 @@ const getAppetizerService = async () => {
                 number: 1000,
                 type: 'appetizer',
                 diet: 'vegetarian',
-                apiKey: '860ebba798fb4343baf9e3863e6afd6e'
+                apiKey: APIKEY
             }
         });
         return response.data;
@@ -111,7 +112,7 @@ const searchRecipesService = async (query) => {
             params: {
                 query,
                 number: 1000,
-                apiKey: '860ebba798fb4343baf9e3863e6afd6e'
+                apiKey: APIKEY
             }
         });
         return response.data;
@@ -120,12 +121,13 @@ const searchRecipesService = async (query) => {
         throw error;
     }
 };
+
 const getRecipeDetails = async (id) => {
     try {
         const response = await axios.get(`${SERVER_URL}/recipes/${id}/information`, {
             params: {
                 includeNutrition: true,
-                apiKey: '860ebba798fb4343baf9e3863e6afd6e'
+                apiKey: APIKEY
             }
         });
         return response.data;
@@ -134,6 +136,7 @@ const getRecipeDetails = async (id) => {
         throw error;
     }
 };
+
 const getCuisineRecipes = async (type) => {
     try {
         const response = await axios.get(`${SERVER_URL}/recipes/complexSearch`, {
@@ -141,7 +144,7 @@ const getCuisineRecipes = async (type) => {
                 cuisine: type,
                 number: 1000,
                 diet: 'vegetarian',
-                apiKey: '860ebba798fb4343baf9e3863e6afd6e'
+                apiKey: APIKEY
             }
         });
         return response.data.results;
@@ -150,7 +153,6 @@ const getCuisineRecipes = async (type) => {
         throw error;
     }
 };
-
 
 export { 
     getDessertService, 
@@ -161,9 +163,9 @@ export {
     getAppetizerService, 
     searchRecipesService,
     getRecipeDetails,
-    getCuisineRecipes,
-    
+    getCuisineRecipes
 };
+
 
 
 

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 import '@splidejs/splide/dist/css/splide.min.css';
@@ -11,22 +11,22 @@ import useStore from '../store/useStore';
 const Breakfast = () => {
   const { breakfast, setBreakfast } = useStore();
 
-  useEffect(() => {
-    const fetchBreakfast = async () => {
-      try {
-        const data = await getBreakfastService();
-        if (data && data.results) {
-          setBreakfast(data.results);
-        }
-      } catch (error) {
-        console.error('Failed to fetch breakfast:', error);
+  const fetchBreakfast = useCallback(async () => {
+    try {
+      const data = await getBreakfastService();
+      if (data && data.results) {
+        setBreakfast(data.results);
       }
-    };
+    } catch (error) {
+      console.error('Failed to fetch breakfast:', error);
+    }
+  }, [setBreakfast]);
 
+  useEffect(() => {
     if (breakfast.length === 0) {
       fetchBreakfast();
     }
-  }, [breakfast, setBreakfast]);
+  }, [breakfast, fetchBreakfast]);
 
   return (
     <Wrapper>
@@ -67,6 +67,7 @@ const Wrapper = styled.div`
 `;
 
 export default Breakfast;
+
 
 
 

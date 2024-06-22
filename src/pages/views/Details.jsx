@@ -1,19 +1,16 @@
-// VeggieVibes\src\components\Details.jsx
-
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Loader from '../loader/Loader';
 import { Helmet } from 'react-helmet';
 import { getRecipeDetails } from '../../service/ApiClient';
 
-
 const Details = () => {
     const { id } = useParams();
     const [recipeDetails, setRecipeDetails] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    const fetchRecipeDetails = async () => {
+    const fetchRecipeDetails = useCallback(async () => {
         try {
             const data = await getRecipeDetails(id);
             setRecipeDetails(data);
@@ -22,11 +19,11 @@ const Details = () => {
             console.error('Error fetching recipe details:', error);
             setLoading(false);
         }
-    };
+    }, [id]);
 
     useEffect(() => {
         fetchRecipeDetails();
-    }, [id]);
+    }, [fetchRecipeDetails]);
 
     if (loading) {
         return <Loader />;
@@ -114,4 +111,5 @@ const TableCell = styled.td`
 `;
 
 export default Details;
+
 
