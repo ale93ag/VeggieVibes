@@ -1,28 +1,22 @@
-import React, { useEffect, useState } from 'react';
+// src/components/SideDish.jsx
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 import '@splidejs/splide/dist/css/splide.min.css';
 import Card from '../Menu/UI/Card';
 import Gradient from '../Menu/UI/Gradient';
-import { getLocalStorageData, setLocalStorageData } from '../service/localStorage';
 import { Link } from 'react-router-dom';
 import { getSideDishService } from '../service/ApiClient';
+import useStore from '../store/useStore';
 
 const SideDish = () => {
-  const [sideDish, setSideDish] = useState([]);
+  const { sideDish, setSideDish } = useStore();
 
-  // Definizione della funzione fetchSideDish all'esterno di useEffect
   const fetchSideDish = async () => {
     try {
-      const localData = getLocalStorageData('sideDish');
-      if (localData) {
-        setSideDish(localData);
-      } else {
-        const data = await getSideDishService();
-        if (data && data.results) {
-          setSideDish(data.results);
-          setLocalStorageData('sideDish', data.results, 60); // Cache for 1 hour (60 minutes)
-        }
+      const data = await getSideDishService();
+      if (data && data.results) {
+        setSideDish(data.results);
       }
     } catch (error) {
       console.error('Failed to fetch side dish:', error);
@@ -30,8 +24,10 @@ const SideDish = () => {
   };
 
   useEffect(() => {
-    fetchSideDish(); // Chiamata della funzione fetchSideDish dentro useEffect
-  }, []);
+    if (sideDish.length === 0) {
+      fetchSideDish();
+    }
+  }, [sideDish]);
 
   return (
     <Wrapper>
@@ -72,4 +68,5 @@ const Wrapper = styled.div`
 `;
 
 export default SideDish;
+
 

@@ -1,28 +1,22 @@
-import React, { useEffect, useState } from 'react';
+// src/components/MainCourse.jsx
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 import '@splidejs/splide/dist/css/splide.min.css';
 import Card from '../Menu/UI/Card';
 import Gradient from '../Menu/UI/Gradient';
-import { getLocalStorageData, setLocalStorageData } from '../service/localStorage';
 import { Link } from 'react-router-dom';
 import { getMainCourseService } from '../service/ApiClient';
+import useStore from '../store/useStore';
 
 const MainCourse = () => {
-  const [mainCourse, setMainCourse] = useState([]);
+  const { mainCourse, setMainCourse } = useStore();
 
-  // Definizione della funzione fetchMainCourse all'esterno di useEffect
   const fetchMainCourse = async () => {
     try {
-      const localData = getLocalStorageData('mainCourse');
-      if (localData) {
-        setMainCourse(localData);
-      } else {
-        const data = await getMainCourseService();
-        if (data && data.results) {
-          setMainCourse(data.results);
-          setLocalStorageData('mainCourse', data.results, 60); // Cache for 1 hour (60 minutes)
-        }
+      const data = await getMainCourseService();
+      if (data && data.results) {
+        setMainCourse(data.results);
       }
     } catch (error) {
       console.error('Failed to fetch main course:', error);
@@ -30,8 +24,10 @@ const MainCourse = () => {
   };
 
   useEffect(() => {
-    fetchMainCourse(); // Chiamata della funzione fetchMainCourse dentro useEffect
-  }, []);
+    if (mainCourse.length === 0) {
+      fetchMainCourse();
+    }
+  }, [mainCourse]);
 
   return (
     <Wrapper>
@@ -72,5 +68,3 @@ const Wrapper = styled.div`
 `;
 
 export default MainCourse;
-
-

@@ -1,32 +1,22 @@
-// VeggieVibes\src\components\Appetizer.jsx
-
-import React, { useEffect, useState } from 'react';
-
+// src/components/Appetizer.jsx
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 import '@splidejs/splide/dist/css/splide.min.css';
 import Card from '../Menu/UI/Card';
 import Gradient from '../Menu/UI/Gradient';
-import { getLocalStorageData, setLocalStorageData } from '../service/localStorage';
 import { Link } from 'react-router-dom';
 import { getAppetizerService } from '../service/ApiClient';
-
+import useStore from '../store/useStore';
 
 const Appetizer = () => {
-  const [appetizers, setAppetizers] = useState([]);
+  const { appetizers, setAppetizers } = useStore();
 
-  // Definizione della funzione fetchAppetizers all'esterno di useEffect
   const fetchAppetizers = async () => {
     try {
-      const localData = getLocalStorageData('appetizers');
-      if (localData) {
-        setAppetizers(localData);
-      } else {
-        const data = await getAppetizerService();
-        if (data && data.results) {
-          setAppetizers(data.results);
-          setLocalStorageData('appetizers', data.results, 60); // Cache for 1 hour (60 minutes)
-        }
+      const data = await getAppetizerService();
+      if (data && data.results) {
+        setAppetizers(data.results);
       }
     } catch (error) {
       console.error('Failed to fetch appetizers:', error);
@@ -34,8 +24,10 @@ const Appetizer = () => {
   };
 
   useEffect(() => {
-    fetchAppetizers(); // Chiamata della funzione fetchAppetizers dentro useEffect
-  }, []);
+    if (appetizers.length === 0) {
+      fetchAppetizers();
+    }
+  }, [appetizers]);
 
   return (
     <Wrapper>
@@ -76,4 +68,3 @@ const Wrapper = styled.div`
 `;
 
 export default Appetizer;
-

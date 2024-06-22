@@ -1,43 +1,39 @@
-import React, { useEffect, useState } from 'react';
+// src/components/Snack.jsx
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 import '@splidejs/splide/dist/css/splide.min.css';
 import Card from '../Menu/UI/Card';
 import Gradient from '../Menu/UI/Gradient';
-import { getLocalStorageData, setLocalStorageData } from '../service/localStorage';
 import { Link } from 'react-router-dom';
 import { getSnackService } from '../service/ApiClient';
+import useStore from '../store/useStore';
 
 const Snack = () => {
-  const [snack, setSnack] = useState([]);
+  const { snack, setSnack } = useStore();
 
-  // Definizione della funzione fetchSnack al di fuori di useEffect per migliorare la leggibilità
   const fetchSnack = async () => {
     try {
-      const localData = getLocalStorageData('snack');
-      if (localData) {
-        setSnack(localData);
-      } else {
-        const data = await getSnackService();
-        if (data && data.results) {
-          setSnack(data.results);
-          setLocalStorageData('snack', data.results, 60); // Cache per 1 ora (60 minuti)
-        }
+      const data = await getSnackService();
+      if (data && data.results) {
+        setSnack(data.results);
       }
     } catch (error) {
-      console.error('Errore nel recupero degli snack:', error);
+      console.error('Failed to fetch snack:', error);
     }
   };
 
   useEffect(() => {
-    fetchSnack(); // Chiamata della funzione fetchSnack dentro useEffect
-  }, []);
+    if (snack.length === 0) {
+      fetchSnack();
+    }
+  }, [snack]);
 
   return (
     <Wrapper>
-      <h3>Snack</h3>
+      <h3>Snacks</h3>
       <Splide
-        aria-label="Snack"
+        aria-label="Snacks"
         options={{
           perPage: 4,
           arrows: true,
@@ -72,4 +68,5 @@ const Wrapper = styled.div`
 `;
 
 export default Snack;
+
 

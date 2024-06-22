@@ -1,33 +1,27 @@
-// VeggieVibes\src\components\Cuisine.jsx
+// VeggieVibes/src/components/Cuisine.jsx
 
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { getLocalStorageData, setLocalStorageData } from '../../service/localStorage';
 import Loader from '../loader/Loader';
 import { Helmet } from 'react-helmet';
-import { getCuisineRecipes } from '../../service/ApiClient'; // Importa la nuova funzione
+import { getCuisineRecipes } from '../../service/ApiClient';
+import useStore from '../../store/useStore';
 
 const Cuisine = () => {
-    const [cuisine, setCuisine] = useState([]);
     const [loading, setLoading] = useState(true);
     const { type } = useParams();
+    const { cuisine, setCuisine } = useStore(); // Utilizzo di Zustand per gestire le ricette di tipo cuisine
 
     const fetchCuisine = async (type) => {
-        const localData = getLocalStorageData('cuisine_' + type);
-        if (localData) {
-            setCuisine(localData);
+        try {
+            setLoading(true);
+            const data = await getCuisineRecipes(type); // Chiamata API per ottenere le ricette per il tipo specificato
+            setCuisine(data); // Imposta le ricette di tipo cuisine nello stato di Zustand
             setLoading(false);
-        } else {
-            try {
-                const data = await getCuisineRecipes(type); // Utilizza la nuova funzione
-                setCuisine(data);
-                setLocalStorageData('cuisine_' + type, data, 60);
-                setLoading(false);
-            } catch (error) {
-                console.error("Failed to fetch data:", error.message);
-                setLoading(false);
-            }
+        } catch (error) {
+            console.error("Failed to fetch data:", error.message);
+            setLoading(false);
         }
     };
 
@@ -101,6 +95,7 @@ const Card = styled.div`
 `;
 
 export default Cuisine;
+
 
 
 

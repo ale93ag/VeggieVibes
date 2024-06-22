@@ -1,29 +1,22 @@
-import React, { useEffect, useState } from 'react';
-
+// src/components/Breakfast.jsx
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 import '@splidejs/splide/dist/css/splide.min.css';
 import Card from '../Menu/UI/Card';
 import Gradient from '../Menu/UI/Gradient';
-import { getLocalStorageData, setLocalStorageData } from '../service/localStorage';
 import { Link } from 'react-router-dom';
 import { getBreakfastService } from '../service/ApiClient';
+import useStore from '../store/useStore';
 
 const Breakfast = () => {
-  const [breakfast, setBreakfast] = useState([]);
+  const { breakfast, setBreakfast } = useStore();
 
-  // Definizione della funzione fetchBreakfast all'esterno di useEffect
   const fetchBreakfast = async () => {
     try {
-      const localData = getLocalStorageData('breakfast');
-      if (localData) {
-        setBreakfast(localData);
-      } else {
-        const data = await getBreakfastService();
-        if (data && data.results) {
-          setBreakfast(data.results);
-          setLocalStorageData('breakfast', data.results, 60); // Cache for 1 hour (60 minutes)
-        }
+      const data = await getBreakfastService();
+      if (data && data.results) {
+        setBreakfast(data.results);
       }
     } catch (error) {
       console.error('Failed to fetch breakfast:', error);
@@ -31,8 +24,10 @@ const Breakfast = () => {
   };
 
   useEffect(() => {
-    fetchBreakfast(); // Chiamata della funzione fetchBreakfast dentro useEffect
-  }, []);
+    if (breakfast.length === 0) {
+      fetchBreakfast();
+    }
+  }, [breakfast]);
 
   return (
     <Wrapper>
@@ -73,4 +68,5 @@ const Wrapper = styled.div`
 `;
 
 export default Breakfast;
+
 
