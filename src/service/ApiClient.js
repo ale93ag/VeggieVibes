@@ -2,7 +2,7 @@ import axios from 'axios';
 import { SERVER_URL, recipesUrlComplexSearch } from './url';
 
 // Dichiarazione centralizzata della APIKEY
-const APIKEY = 'f2da81fd7a30432f9f990cfd3d42dd52';
+const APIKEY = '81a32e57dbdb47bbb6ca27e9492f0d84';
 
 const getDessertService = async () => {
     try {
